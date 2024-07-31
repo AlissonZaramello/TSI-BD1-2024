@@ -106,8 +106,9 @@ DELETE FROM Fornecedor WHERE Estado != 'SP' AND Pais = 'Brasil';
 -- 13 Apresentar todos os fornecedores cadastrados (só devem aparecer os do estado de SP e o estrangeiro). 
 SELECT * FROM Fornecedor;
 
--- EXERCICIO 4
+-- EXERCICIO 5
 
+-- a) Criar um banco chamada escritorio_SeuNome com as tabelas
 CREATE DATABASE escritorio_Alisson;
 
 USE escritorio_Alisson;
@@ -115,7 +116,8 @@ USE escritorio_Alisson;
 CREATE TABLE Departamento(
     Numero int,
     Nome varchar(100),
-    Localizacao varchar(100)
+    Localizacao varchar(100),
+    PRIMARY KEY (Numero)
 );
 
 CREATE TABLE Gerente (
@@ -123,7 +125,7 @@ CREATE TABLE Gerente (
     Nome varchar(100),
     NumDepto int,
     PRIMARY KEY(Codigo),
-    CONSTRAINT FK_Depto_Gerente FOREIGN KEY (NumDepto) REFERENCES Departamento (Numero);
+    CONSTRAINT FK_Depto1 FOREIGN KEY(NumDepto) REFERENCES Departamento(Numero)
 );
 
 CREATE TABLE Empregado(
@@ -135,7 +137,7 @@ CREATE TABLE Empregado(
     NumDepto int,
     Salario numeric,
     PRIMARY KEY(Codigo),
-    CONSTRAINT FK_Depto_Empregado FOREIGN KEY (NumDepto) REFERENCES Departamento (Numero)
+    CONSTRAINT FK_Depto FOREIGN KEY (NumDepto) REFERENCES Departamento (Numero)
 );
 
 CREATE TABLE Projeto(
@@ -150,13 +152,62 @@ CREATE TABLE Trabalha_Em(
     NumProj int,
     Total_Horas_Semanais int,
     PRIMARY KEY (EmpCod, NumProj),
-    CONSTRAINT FK_Cod_Empregado (EmpCod) REFERENCES Empregado (Codigo),
-    CONSTRAINT FK_Num_Projeto (NumProj) REFERENCES Projeto (Numero)
+    CONSTRAINT FK_Cod_Empregado FOREIGN KEY (EmpCod) REFERENCES Empregado(Codigo),
+    CONSTRAINT FK_Num_Projeto FOREIGN KEY (NumProj) REFERENCES Projeto(Numero)
 );
 
+-- b) Cadastrar 3 registros para cada tabela, incluindo a tabela Trabalha_Em
+-- Departamento
+INSERT Departamento(Numero, Nome, Localizacao) VALUE (1, 'T.I', 'Franca');
+INSERT Departamento(Numero, Nome, Localizacao) VALUE (2, 'Administracao', 'Russia');
+INSERT Departamento(Numero, Nome, Localizacao) VALUE (3, 'RH', 'Estados Unidos');
 
+-- Gerente
+INSERT Gerente(Codigo, Nome, NumDepto) VALUE (1, 'Alisson', 1);
+INSERT Gerente(Codigo, Nome, NumDepto) VALUE (2, 'Pedro', 2);
+INSERT Gerente(Codigo, Nome, NumDepto) VALUE (3, 'Bonini', 3);
 
+-- Empregado
+INSERT Empregado(Codigo, Nome, Endereco, Telefone, Data_Admissao, NumDepto, Salario) VALUE (1, 'Leonardo', 'Rua sla', 189991, '2024/07/30', 1, 1900.00);
+INSERT Empregado(Codigo, Nome, Endereco, Telefone, Data_Admissao, NumDepto, Salario) VALUE (2, 'Luan', 'Rua sla1', 189992, '2024/06/30', 2, 1750.00);
+INSERT Empregado(Codigo, Nome, Endereco, Telefone, Data_Admissao, NumDepto, Salario) VALUE (3, 'Kaua', 'Rua sla2', 189993, '2024/05/30', 3, 1300.00);
 
+-- Projeto
+INSERT Projeto(Numero, Nome, Localizacao) VALUE (1, 'Reator Nuclear', 'Chernobyl');
+INSERT Projeto(Numero, Nome, Localizacao) VALUE (2, 'Space X', 'Estados Unidos');
+INSERT Projeto(Numero, Nome, Localizacao) VALUE (3, 'TikTok', 'China');
 
+-- Trabalha_Em
+INSERT Trabalha_Em (EmpCod, NumProj, Total_Horas_Semanais) VALUE (1, 1, 100);
+INSERT Trabalha_Em (EmpCod, NumProj, Total_Horas_Semanais) VALUE (2, 2, 80);
+INSERT Trabalha_Em (EmpCod, NumProj, Total_Horas_Semanais) VALUE (3, 3, 40);
 
+-- c) Informe o nome e a localização de todos os departamentos.
 
+SELECT Nome, Localizacao FROM Departamento;
+
+--d) Obtenha todos os dados dos empregados com salário superior ou igual a
+3000 Reais
+
+SELECT * FROM Empregado WHERE Salario >= 3000;
+
+--e) Apresentar o nome dos gerentes.
+
+SELECT Nome FROM Gerente;
+
+-- f) Consultar o nome, o salário e o salário com acréscimo de 10% com nome de ‘salário
+atualizado’ dos empregados.
+
+SELECT Nome, Salario, Salario * 1.10 as 'Salario atualizado' FROM Empregado;
+
+-- g) Atualizar o salário, aumentando o salário de todos empregados em 10%.
+
+UPDATE Empregado SET Salario = Salario * 1.10;
+
+-- h) Incluir um campo chamado tipo_projeto (varchar(15)) na tabela projeto.
+
+ALTER TABLE Projeto ADD tipo_projeto varchar(15);
+
+-- i) Atualizar a tabela projeto, colocando o valor ‘grande’ no campo tipo_projeto. 
+
+UPDATE Projeto SET tipo_projeto = 'grande';
